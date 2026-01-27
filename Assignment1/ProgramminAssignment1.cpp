@@ -6,10 +6,10 @@ using namespace std;
 
 bool PreferNew(vector<vector<int>> &Array, int n, int s, int h1, int h2) {
     for (int i = 0; i < n; i++) {
-        if(Array[s][i] - 1 == h2) {
+        if(Array[s][i] == h1) {
             return true;
         }
-        if(Array[s][i] - 1 == h1) {
+        if(Array[s][i] == h2) {
             return false;
         }
     }
@@ -39,10 +39,12 @@ vector<int> GaleShapely(int n, vector<vector<int>> &Hosp, vector<vector<int>> &S
             }
             else {
                 int h2 = StuAssignment[s];
-                if (!PreferNew(Stu, n, s, h, h2)) {
+                if (PreferNew(Stu, n, s, h, h2)) {
                     StuAssignment[s] = h;
                     HospAssigned[h] = 1;
                     HospAssigned[h2] = 0;
+                    h = 0;
+                    i = 0;
                 }
             }
 
@@ -55,13 +57,18 @@ vector<int> GaleShapely(int n, vector<vector<int>> &Hosp, vector<vector<int>> &S
 
 
 int main() {
-    vector<vector<int>> stuPrefer = { {1, 2, 3}, {2, 3, 1}, {3, 1, 2} };
-    vector<vector<int>> hospPrefer = { {1, 2, 3}, {2, 3, 1}, {3, 1, 2} };
+    int n = 3;
+    vector<vector<int>> stuPrefer = { {1, 2, 3}, 
+                                      {2, 3, 1}, 
+                                      {2, 1, 3} };
 
-    vector<int> wPartner = GaleShapely(3, hospPrefer, stuPrefer);
-    cout << "Woman   Man" << endl;
+    vector<vector<int>> hospPrefer = { {2, 1, 3}, 
+                                       {1, 2, 3}, 
+                                       {1, 2, 3} };
+
+    vector<int> Assignment = GaleShapely(n, hospPrefer, stuPrefer);
     int N = 3;
     for (int i = 0; i < N; i++)
-        cout << i << " " << wPartner[i] << endl;
+        cout << i + 1 << " " << Assignment[i] + 1 << endl;
     return 0;
 }
