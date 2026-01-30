@@ -3,6 +3,9 @@
 #include <iterator>
 #include <algorithm>
 #include <string>
+#include <chrono>
+#include <random>
+#include <numeric>
 using namespace std;
 
 // TASK A -----------------------------------------------------------------
@@ -93,48 +96,37 @@ bool VerifyMatching(int n, const vector<vector<int>>& HospPref, const vector<vec
     // rank tables
     auto HospRank = BuildRank(HospPref);
     auto StuRank = BuildRank(StuPref);
-    if(HospPref.empty() || StuRank.empty()){
+    if(HospRank.empty() || StuRank.empty()){
         message = "INVALID: preference lists are not permutations of 1...n (either duplicates or not in range).";
         return false;
     }
     // Check validity
     // each student matched to exactly one hospital & each hospital matched exactly once
-    vector<int> HospToStu(n, -1);
-    vector<int> HospCount(n, 0);
-    for (int s = 0; s < n; s++) {
-        int h = StuAssignment[s];
-        if (h < 0 || h >= n) {
-            message = "INVALID: student " + to_string(s + 1) + " matched to out-of-range hospital.";
+    vector<int> seenStudent(n, 0);
+    vector<int> stuToHosp(n, -1);
+    for (int h = 0; h < n; h++) {
+        int s = StuAssignment[h];
+        if (s < 0 || s >= n) {
+            message = "INVALID: hospital " + to_string(h + 1) + " matched to out-of-range student.";
             return false;
         }
-        HospCount[h]++;
-        if (HospToStu[h] != -1) {
-            message = "INVALID: hospital " + to_string(h + 1) + " matched to multiple students (e.g., "
-                      + to_string(HospToStu[h] + 1) + " and " + to_string(s + 1) + ").";
+        if (seenStudent[s]) {
+            message = "INVALID: student " + to_string(s + 1) + " matched to multiple hospitals.";
             return false;
         }
-        HospToStu[h] = s;
+        seenStudent[s] = 1;
+        stuToHosp[s] = h;
     }
+    // Check for unstable pairs
+    for (int h = 0; h < n; h++) {
+        int sCurrent = StuAssignment[h];
+        for (int pos = 0; pos < HospRank[h][sCurrent]; pos++) {
+            int s = HospPref[h][pos] - 1;          // preferred student
+            int hCurrentForS = stuToHosp[s];       // s's current hospital
 
-    for (int h = 0; h < n; h++) {
-        if (HospCount[h] != 1) {
-            message = "INVALID: hospital " + to_string(h + 1) + " has " + to_string(HospCount[h]) + " matches.";
-            return false;
-        }
-    }
-    // No unstable pairs
-    for (int h = 0; h < n; h++) {
-        int s_current = HospToStu[h];
-        for (int s = 0; s < n; s++) {
-            if (s == s_current) continue;
-            bool h_prefers_s = (HospRank[h][s] < HospRank[h][s_current]);
-            if (!h_prefers_s) continue;
-            int h_current_for_s = StuAssignment[s];
-            bool s_prefers_h = (StuRank[s][h] < StuRank[s][h_current_for_s]);
-            if (s_prefers_h) {
-                // Found unstable pair
-                message = "INVALID: unstable pair found (hospital " + to_string(h + 1)
-                        + ", student " + to_string(s + 1) + ").";
+            if (StuRank[s][h] < StuRank[s][hCurrentForS]) {
+                message = "INVALID: unstable pair (hospital " + to_string(h + 1) +
+                          ", student " + to_string(s + 1) + ").";
                 return false;
             }
         }
@@ -144,7 +136,17 @@ bool VerifyMatching(int n, const vector<vector<int>>& HospPref, const vector<vec
 }
 
 // TASK C ----------------------------------------------------------------------------
-
+// Generate random preference lists (a row is a random permutation of 1..n)
+vector<vector<int>> RandomPrefs(int n, mt19937 &rng) {
+    vector<vector<int>> pref(n, vector<int>(n));
+    vector<int> base(n);
+    iota(base.begin(), base.end(), 1);
+    for (int i = 0; i < n; i++) {
+        pref[i] = base;
+        shuffle(pref[i].begin(), pref[i].end(), rng);
+    }
+    return pref;
+}
 
 // MAIN -----------------------------------------------------------------------------------------------
 int main(int argc, char** argv) {
@@ -154,7 +156,36 @@ int main(int argc, char** argv) {
     // what mode (task)
     string mode = "match";
     if(argc >= 2) mode = argv[1];
-
+    //Measure running time (TASK C)
+    if(mode == "measure"){
+        mt19937 rng(123456);
+        vector<int> ns = {1,2,4,8,16,32,64,128,256,512};
+        cout << "n,matcher_us,verifier_us\n";
+        for (int n : ns) {
+            auto hospPrefer = RandomPrefs(n, rng);
+            auto stuPrefer  = RandomPrefs(n, rng);
+            using clk = chrono::high_resolution_clock;
+        // time matcher
+            auto t0 = clk::now();
+            vector<int> StuAssignment = GaleShapely(n, hospPrefer, stuPrefer);
+            auto t1 = clk::now();
+            long long matcher_us = chrono::duration_cast<chrono::microseconds>(t1 - t0).count();
+        // convert to hospToStu for verifier
+            vector<int> hospToStu(n, -1);
+            for (int s = 0; s < n; s++) {
+                int h = StuAssignment[s];
+                if (h >= 0 && h < n) hospToStu[h] = s;
+            }
+        // time verifier
+            string msg;
+            auto t2 = clk::now();
+            (void)VerifyMatching(n, hospPrefer, stuPrefer, hospToStu, msg);
+            auto t3 = clk::now();
+            long long verifier_us = chrono::duration_cast<chrono::microseconds>(t3 - t2).count();
+            cout << n << "," << matcher_us << "," << verifier_us << "\n";
+        }
+        return 0;
+    }
     int n;
     if (!(cin >> n)) {
         cout << "INVALID: missing n (empty file or unreadable input).\n";
@@ -222,11 +253,7 @@ int main(int argc, char** argv) {
         bool ok = VerifyMatching(n, hospPrefer, stuPrefer, hospToStu, msg);
         cout << msg << "\n";
         return ok ? 0 : 0;
-    }
-    //Measure running time (TASK C)
-    if(mode == "measure"){
-
-    }
+    }    
     // incorrect mode
     cout << "INVALID: unknown mode. Use './program ' and then 'verify' 'match' or 'measure'";
     return 0;
