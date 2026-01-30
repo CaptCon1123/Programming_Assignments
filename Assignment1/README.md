@@ -13,3 +13,10 @@ Get-Content data/verify_example.in | .\pa1 verify
 
 measure an example:
 .\pa1 measure | Out-File results\timings.csv -Encoding utf8
+
+make sure to install matplotlib:
+python -m pip install matplotlib
+
+plot your task C measurements (make sure to "cd .." afterwards):
+cd results
+python plot_timings.py
