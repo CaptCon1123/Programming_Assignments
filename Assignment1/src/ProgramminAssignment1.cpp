@@ -22,6 +22,8 @@ bool PreferNew(vector<vector<int>> &Array, int n, int s, int h1, int h2) {
 }
 
 vector<int> GaleShapely(int n, vector<vector<int>>& Hosp, vector<vector<int>>& Stu) {
+    //to avoid potential issues with nextIndex[h] when n == 0
+    if(n == 0) return {};
     vector<int> StuAssignment(n, -1);
     vector<int> HospAssigned(n, 0);
     // next position in Hosp[h]'s preference list to propose
@@ -36,7 +38,11 @@ vector<int> GaleShapely(int n, vector<vector<int>>& Hosp, vector<vector<int>>& S
                 break;
             }
         }
-
+        if (h == n) break;
+        if (nextIndex[h] >= n) {        
+            HospAssigned[h] = 1;    // marked as done to avoid infinite loop
+            continue;
+        }
         for (int i = nextIndex[h]; (i < n) && (HospAssigned[h] != 1); i++) {
             int s = Hosp[h][i] - 1;
             nextIndex[h] = i + 1;
@@ -125,7 +131,7 @@ bool VerifyMatching(int n, const vector<vector<int>>& HospPref, const vector<vec
             int hCurrentForS = stuToHosp[s];       // s's current hospital
 
             if (StuRank[s][h] < StuRank[s][hCurrentForS]) {
-                message = "INVALID: unstable pair (hospital " + to_string(h + 1) +
+                message = "Unstable: blocking pair found: (hospital " + to_string(h + 1) +
                           ", student " + to_string(s + 1) + ").";
                 return false;
             }
