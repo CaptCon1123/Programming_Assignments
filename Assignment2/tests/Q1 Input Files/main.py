@@ -82,6 +82,11 @@ if __name__ == "__main__":
     fifo_miss = FIFO(k, requests)
     lru_miss = LRU(k, requests)
     optff_miss = OPTFF(k, requests)
-    print(f"FIFO  : {fifo_miss}")
-    print(f"LRU   : {lru_miss}")
-    print(f"OPTFF : {optff_miss}")
+    output = [f"FIFO  : {fifo_miss}", f"LRU   : {lru_miss}", f"OPTFF : {optff_miss}"]
+    # print to terminal
+    for line in output:
+        print(line)
+    # write to output.txt
+    with open("output.txt", "w") as f:
+        for line in output:
+            f.write(line + "\n")
