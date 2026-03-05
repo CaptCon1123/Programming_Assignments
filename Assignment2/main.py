@@ -76,9 +76,12 @@ def OPTFF(k, m):
         nxt[x] = x_next
     return missNum
 
-k = 2
-m = [1, 1, 2, 3, 1, 3, 3]
-
-print(FIFO(k, m))
-print(LRU(k,m))
-print(OPTFF(k, m))
+if __name__ == "__main__":
+    k, m = map(int, input().split())
+    requests = list(map(int, input().split()))
+    fifo_miss = FIFO(k, requests)
+    lru_miss = LRU(k, requests)
+    optff_miss = OPTFF(k, requests)
+    print(f"FIFO  : {fifo_miss}")
+    print(f"LRU   : {lru_miss}")
+    print(f"OPTFF : {optff_miss}")
