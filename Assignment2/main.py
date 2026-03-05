@@ -81,3 +81,4 @@ m = [1, 1, 2, 3, 1, 3, 3]
 
 print(FIFO(k, m))
 print(LRU(k,m))
+print(OPTFF(k, m))
