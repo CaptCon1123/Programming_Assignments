@@ -1,18 +1,19 @@
+from collections import deque
 from collections import OrderedDict
 
 def FIFO(k, m):
     cache = deque()
-    set = set()
+    Vset = set()
     missNum = 0
 
     for i in m:
-        if i not in set:
+        if i not in Vset:
             if len(cache) >= k:
                 oldest = cache.popleft()
-                set.remove(oldest)
+                Vset.remove(oldest)
             
             cache.append(i)
-            set.add(i)
+            Vset.add(i)
             missNum += 1
 
 
@@ -32,3 +33,9 @@ def LRU(k, m):
             cache.move_to_end(i)
 
     return missNum
+
+k = 2
+m = [1, 1, 2, 3, 1, 3, 3]
+
+print(FIFO(k, m))
+print(LRU(k,m))
