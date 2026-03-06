@@ -40,3 +40,13 @@ For k = 3, the request sequence 2, 1, 3, 4, 3, 2 results in fewer misses with OP
 The difference occurs when the request 4 is processed since the cache contains 2,1,3 and both FIFO & LRU will evict 2, which they'll need again. OPTFF knows the future values, so it will evict 1 since it will not be used again. This prevents the final request to 2 from causing a miss under OPTFF.
 
 Question 3:
+Let OPTFF be Belady’s Farthest-in-Future algorithm.
+Let A be any offline algorithm that knows the full request sequence.
+
+Statement: For any fixed request sequence, OPTFF has no more misses than A.
+
+Proof by exchange:
+- Consider the first step t where A makes a different eviction decision than OPTFF. At step t, a cache miss occurs and the cache is full.
+- OPTFF evicts the item whose next request occurs farthest in the future (or never occurs again). A evicts some other item.
+- Since OPTFF chose the item used farthest in the future, the item evicted by A will be needed earlier than the one evicted by OPTFF. Therefore, replacing A’s choice with OPTFF’s choice cannot increase the number of misses. We can change A to match OPTFF at step t without increasing the number of misses. 
+- Repeating this every step where A differs from OPTFF will result in A transforming into OPTFF without increasing A's total number of misses, therefore OPTFF must have no more misses than A (any offline algorithm that knows the full request sequence), proving that OPTFF is optimal.
