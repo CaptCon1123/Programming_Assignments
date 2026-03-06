@@ -34,8 +34,54 @@ def LRU(k, m):
 
     return missNum
 
-k = 3
-m = [2, 1, 3, 4, 3, 2]
+def OPTFF(k, m):
+    INF = 10**18
+    n = len(m)
+    next_idx = [INF] * n
+    next_pos = {} 
 
-print(FIFO(k, m))
-print(LRU(k,m))
+    for i in range(n - 1, -1, -1):
+        x = m[i]
+        next_idx[i] = next_pos.get(x, INF)
+        next_pos[x] = i
+    cache = set()
+    nxt = {}   
+    missNum = 0
+
+    for i, x in enumerate(m):
+        x_next = next_idx[i]
+
+        if x in cache:
+            # hit
+            nxt[x] = x_next
+            continue
+        # miss
+        missNum += 1
+        if len(cache) < k:
+            cache.add(x)
+            nxt[x] = x_next
+            continue
+        # cache full
+        victim = None
+        victim_next = -1
+        for item in cache:
+            item_next = nxt.get(item, INF)
+            if item_next > victim_next:
+                victim_next = item_next
+                victim = item
+
+        cache.remove(victim)
+        nxt.pop(victim, None)
+        cache.add(x)
+        nxt[x] = x_next
+    return missNum
+
+if __name__ == "__main__":
+    k, m = map(int, input().split())
+    requests = list(map(int, input().split()))
+    fifo_miss = FIFO(k, requests)
+    lru_miss = LRU(k, requests)
+    optff_miss = OPTFF(k, requests)
+    print(f"FIFO  : {fifo_miss}")
+    print(f"LRU   : {lru_miss}")
+    print(f"OPTFF : {optff_miss}")
