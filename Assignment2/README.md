@@ -32,3 +32,11 @@ ____________________________________________________|
 - OPTFF produced the fewest cache misses on two of the three input files. On File2, all three policies resulted in the same number of misses. This is expected because OPTFF is the optimal offline algorithm and therefore cannot have more misses than the other policies.
 
 - LRU generally performed better than FIFO. On File1 and File3, FIFO had more misses than LRU (2 and 6 more misses respectively), while both policies had the same number of misses on File2. This occurs because LRU uses recent access history to predict future requests, while FIFO evicts items solely based on insertion order and may remove frequently used items.
+
+* In File2, we believe all policies performed identically because the request sequence repeatedly accessed a set of four items while the cache capacity was also four. Once the cache was filled, all subsequent accesses resulted in hits.
+
+Question 2:
+For k = 3, the request sequence 2, 1, 3, 4, 3, 2 results in fewer misses with OPTFF than both LRU and FIFO. Specifically it has 5 misses with LRU and FIFO, and only 4 misses with OPTFF.
+The difference occurs when the request 4 is processed since the cache contains 2,1,3 and both FIFO & LRU will evict 2, which they'll need again. OPTFF knows the future values, so it will evict 1 since it will not be used again. This prevents the final request to 2 from causing a miss under OPTFF.
+
+Question 3:
