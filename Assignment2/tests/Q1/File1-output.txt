@@ -1,0 +1,3 @@
+FIFO  : 48
+LRU   : 46
+OPTFF : 30
