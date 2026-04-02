@@ -1,3 +1,6 @@
+import time
+import glob
+
 def findSubString(K, x, A, B):
     n, m = len(A), len(B)
 
@@ -30,39 +33,62 @@ def findSubString(K, x, A, B):
 
 
 
+
+def readInputFile(path):
+    with open(path, "r", encoding="utf-8-sig") as f:
+        lines = [line.strip() for line in f.readlines() if line.strip()]
+
+    idx = 0
+    K = int(lines[idx]); idx += 1
+
+    charValues = {}
+    for i in range(K):
+        ch, val = lines[idx].split()
+        charValues[ch] = int(val)
+        idx += 1
+
+    A = lines[idx]; idx += 1
+    B = lines[idx]
+
+    return K, charValues, A, B
+
+
+
+def testTime():
+    results = []
+    for path in sorted(glob.glob("inputs/*.txt")):
+        K, charValues, A, B = readInputFile(path)
+
+        start = time.perf_counter()
+        maxValue, subseq = findSubString(K, charValues, A, B)
+        end = time.perf_counter()
+
+        runtimems = (end - start) * 1000
+        results.append((path, runtimems, maxValue, subseq))
+
+        print(f"{path}: {runtimems:.3f} ms")
+
+    files = [r[0] for r in results]
+    times = [r[1] for r in results]
+
+    plt.plot(range(len(times)), times, marker='o')
+    plt.xlabel("Input File")
+    plt.ylabel("Runtime (ms)")
+    plt.title("Runtime Across Test Files")
+    plt.grid(True)
+    plt.show()
+
+    return results
+
+
+
+
+
+
 if __name__ == "__main__":
-    K = 3
-    x = {'a': 2, 'b': 4, 'c': 5}
-    A = "aacb"
-    B = "caab"
+    import matplotlib.pyplot as plt
 
-    maxV, sub = findSubString(K, x, A, B)
-    print(maxV)
-    print(sub)
+    results = testTime()
 
-    K = 3
-    x = {'a': 2, 'b': 4, 'c': 5}
-    A = "caab"
-    B = "aacb"
+    
 
-    maxV, sub = findSubString(K, x, A, B)
-    print(maxV)
-    print(sub)
-
-    K = 3
-    x = {'a': 1, 'p': 1, 'l': 1, 'e': 1, 'n': 1, 't': 1}
-    A = "apple"
-    B = "planet"
-
-    maxV, sub = findSubString(K, x, A, B)
-    print(maxV)
-    print(sub)
-
-    K = 3
-    x = {'a': 1, 'p': 1, 'l': 1, 'e': 1, 'n': 1, 't': 1}
-    A = "planet"
-    B = "apple"
-
-    maxV, sub = findSubString(K, x, A, B)
-    print(maxV)
-    print(sub)
