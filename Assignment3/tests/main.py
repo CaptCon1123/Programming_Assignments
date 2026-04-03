@@ -1,5 +1,6 @@
 import time
 import glob
+import matplotlib.pyplot as plt
 
 def findSubString(K, x, A, B):
     n, m = len(A), len(B)
@@ -56,7 +57,7 @@ def readInputFile(path):
 
 def testTime():
     results = []
-    for path in sorted(glob.glob("inputs/*.txt")):
+    for path in sorted(glob.glob("Q1/inputs/*.txt")):
         K, charValues, A, B = readInputFile(path)
 
         start = time.perf_counter()
@@ -86,7 +87,6 @@ def testTime():
 
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
 
     results = testTime()
 
