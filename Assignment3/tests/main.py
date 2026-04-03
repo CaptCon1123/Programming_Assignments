@@ -29,7 +29,7 @@ def findSubString(K, x, A, B):
 
     subseq.reverse()
 
-    return sub[n][m], subseq
+    return sub[n][m], "".join(subseq) # return as string just to make it easier
 
 
 
