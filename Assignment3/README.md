@@ -62,4 +62,5 @@ for i = 1 to n:
             arr[i][j] = max(arr[i-1], arr[j-1])
 return arr[n][m]
 
-The function 
+The function tracks the maximum total value of any common subsequence between the first i characters of A and the first j characters of B. To compute these values efficiently, a 2D array of size (n+1) x (m+1) is used, where n is the length of A and m is the length of B. The base cases are when either string prefix has length 0. In that case, the only common subsequence is the empty subsequence, so the value is 0. Therefore, you can just initialize the first row and first column of the table to 0. For every other entry, the recurrence is applied:
+if A[i] = B[j], then the value in the array at arr[i][j] is set to arr[i-1][j-1] + c(A[i]), otherwise arr[i][j] is set to the max between arr[i-1][j] and arr[i][j-1]. The runtime of the algorithm is O(nm) since there are (n+1)(m+1) entries.
