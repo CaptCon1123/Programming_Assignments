@@ -49,3 +49,17 @@ Let OPT(i,j) represent the maximum total value of any common subsequence between
     Thus the recurrence equation would be optimal/correct in every case.
 
 Question 3:
+Create Array arr[0...n][0...m]
+for i = 0 to n:
+    arr[i][0] = 0
+for j = 0 to m:
+    arr[0][j] = 0
+for i = 1 to n:
+    for j = 1 to m:
+        if A[i] == B[j]:
+            arr[i][j] = arr[i-1][j-1] + c(A[i])
+        else:
+            arr[i][j] = max(arr[i-1], arr[j-1])
+return arr[n][m]
+
+The function 
