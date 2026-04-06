@@ -5,11 +5,9 @@ Connor McFarlin - UFID: 3892-1501
 No compiling/building needed. The only dependencies used are glob, time, and matplotlib, all built-in libraries (pip install matplotlib may be needed).
 
 Input and Output Format:
-Run the program by directing an input file with "python main.py < input.txt" (make sure you are in the Assignment3 src directory and that you're using a command prompt terminal, not powershell)
-You can also just run the script and input with correct format into the terminal line like:
-"2
-1 
-2"
+Run the program in the terminal "python tests\main.py" and it will read the input in "Input.txt" and output the max possible value and the substring that produces it. (make sure you are in the Assignment3 src directory and that you're using a command prompt terminal, not powershell)
+
+
 
 The results are pinted out as well as put into an output.txt file.
 
@@ -21,6 +19,7 @@ Assumptions:
 
 Solutions to the Written Component:
 Question 1:
+The Graph is "output.png" in the output file in the Q1 file. The inputs used to generate it are in the input file of the Q1 file.
 
 Question 2:
 Let OPT(i,j) represent the maximum total value of any common subsequence between the prefixes A[1..i] and B[1..j], where the value of a subsequence is the sum of the values of its characters.

@@ -77,8 +77,9 @@ def testTime():
     plt.ylabel("Runtime (ms)")
     plt.title("Runtime Across Test Files")
     plt.grid(True)
-    #plt.show()
+    
     plt.savefig('Q1/output/output.png')
+    plt.show()
 
     return results
 
@@ -89,7 +90,12 @@ def testTime():
 
 if __name__ == "__main__":
 
-    results = testTime()
+    K, charValues, A, B = readInputFile("tests/Input.txt")
+
+    maxValue, subseq = findSubString(K, charValues, A, B)
+
+    print(maxValue)
+    print(subseq)
 
     
 
