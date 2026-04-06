@@ -77,7 +77,8 @@ def testTime():
     plt.ylabel("Runtime (ms)")
     plt.title("Runtime Across Test Files")
     plt.grid(True)
-    plt.show()
+    #plt.show()
+    plt.savefig('Q1/output/output.png')
 
     return results
 
