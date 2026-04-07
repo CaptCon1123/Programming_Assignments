@@ -1,6 +1,7 @@
 import time
 import glob
 import matplotlib.pyplot as plt
+import os
 
 def findSubString(K, x, A, B):
     n, m = len(A), len(B)
@@ -34,26 +35,34 @@ def findSubString(K, x, A, B):
 
 
 
-
-def readInputFile(path):
-    with open(path, "r", encoding="utf-8-sig") as f:
-        lines = [line.strip() for line in f.readlines() if line.strip()]
-
-    idx = 0
-    K = int(lines[idx]); idx += 1
+def readInput():
+    K = int(input().strip())
 
     charValues = {}
-    for i in range(K):
-        ch, val = lines[idx].split()
+    for _ in range(K):
+        ch, val = input().split()
         charValues[ch] = int(val)
-        idx += 1
 
-    A = lines[idx]; idx += 1
-    B = lines[idx]
+    A = input().strip()
+    B = input().strip()
 
     return K, charValues, A, B
 
 
+# for Q1
+def readInputFile(path):
+    with open(path, "r", encoding="utf-8-sig") as f:
+        lines = [line.strip() for line in f.readlines() if line.strip()]
+        idx = 0 
+        K = int(lines[idx]); idx += 1
+        charValues = {} 
+        for i in range(K):
+            h, val = lines[idx].split()
+            charValues[ch] = int(val) 
+            idx += 1
+            A = lines[idx]; idx += 1 
+            B = lines[idx]
+    return K, charValues, A, B
 
 def testTime():
     results = []
@@ -85,17 +94,17 @@ def testTime():
 
 
 
-
-
-
 if __name__ == "__main__":
-
-    K, charValues, A, B = readInputFile("tests/Input.txt")
+    K, charValues, A, B = readInput()
 
     maxValue, subseq = findSubString(K, charValues, A, B)
-
+    #Print
     print(maxValue)
     print(subseq)
+    #Output file
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_path = os.path.join(script_dir, "output.txt")
 
-    
-
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(str(maxValue) + "\n")
+        f.write(subseq + "\n")

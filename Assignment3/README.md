@@ -2,20 +2,21 @@ Programming Assignment 3
 Fernando Hernandez Martin - UFID: 58200371
 Connor McFarlin - UFID: 3892-1501
 
-No compiling/building needed. The only dependencies used are glob, time, and matplotlib, all built-in libraries (pip install matplotlib may be needed).
+No compiling/building needed. The only dependencies used are glob, time, matplotlib, and os, all built-in libraries (pip install matplotlib may be needed).
 
 Input and Output Format:
-Run the program in the terminal "python tests\main.py" and it will read the input in "Input.txt" and output the max possible value and the substring that produces it. (make sure you are in the Assignment3 src directory and that you're using a command prompt terminal, not powershell)
-
-
+Run the program by using the command "python main.py", and then typing in the input into the terminal, it will output the max possible value and the substring that produces it. (make sure you are in the Assignment3 src directory and that you're using a command prompt terminal, not powershell)
+Expected correct input format:
+"3
+a 2
+b 4
+c 5
+aacb
+caab"
 
 The results are pinted out as well as put into an output.txt file.
 
-Assumptions:
-- The request sequence contains exactly m integers.
-- All request IDs are integers.
-- The cache capacity k ≥ 1.
-- Input is provided through standard input (using file redirection).
+Assumptions: That the correct input format is used (as specified by the assignment pdf)
 
 Solutions to the Written Component:
 Question 1:
